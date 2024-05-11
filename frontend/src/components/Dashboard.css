@@ -1,0 +1,89 @@
+.dashboard-container {
+  margin: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.app-bar {
+  background-color: #064588;
+  color: #FF9900;
+  padding: 20px;
+  display: flex;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+}
+
+.app-bar h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.add-button {
+  background-color: #007aff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #4da9ff;
+}
+
+.item-count {
+  font-size: 16px; /* Adjust the font size as needed */
+  margin-left: 75%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #e8e8e8;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f7f7;
+}
+
+.edit-button,
+.delete-button {
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-button {
+  background-color: #21cf7b;
+  margin-right: 3px;
+}
+
+.delete-button {
+  background-color: #c72f2f;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  filter: brightness(0.8);
+}

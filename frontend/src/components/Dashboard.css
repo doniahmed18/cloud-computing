@@ -1,3 +1,7 @@
+/* .background{
+    background-color: #74adea;
+} */
+
 .dashboard-container {
   margin: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -86,4 +90,12 @@ tr:nth-child(even) {
 .edit-button:hover,
 .delete-button:hover {
   filter: brightness(0.8);
+}
+
+/* Styles for the item image */
+.item-image {
+  width: 50px; /* Adjust the width as needed */
+  height: 50px; /* Adjust the height as needed */
+  border-radius: 50%; /* Make the image round */
+  object-fit: cover; /* Maintain aspect ratio and cover the entire space */
 }

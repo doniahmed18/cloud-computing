@@ -27,23 +27,38 @@ const Dashboard = () => {
     console.log(`Editing item with ID: ${id}`)
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, imageURL) => {
     console.log("Received id:", id) // Log the value of id
-    if (!id) {
-      console.error("Invalid id provided")
+    console.log("Received imageURL:", imageURL) // Log the imageURL
+
+    if (!id || !imageURL) {
+      console.error("Invalid id or imageURL provided")
       return
     }
+
+    // Extract the object key from the imageURL
+    const objectKey = imageURL.substring(imageURL.lastIndexOf("/") + 1)
+
     const confirmDelete = window.confirm(
       "Do you really want to delete this item?"
     )
+
     if (confirmDelete) {
       try {
+        // Delete the item from the API
         const response = await fetch(`http://localhost:4000/api/items/${id}`, {
           method: "DELETE",
         })
+
         if (!response.ok) {
           throw new Error("Failed to delete item")
         }
+
+        // Delete the associated image from S3
+        await fetch(`http://s3.amazonaws.com/clouddprojectt/${objectKey}`, {
+          method: "DELETE",
+        })
+
         fetchItems()
       } catch (error) {
         console.error("Error deleting item:", error)
@@ -80,7 +95,7 @@ const Dashboard = () => {
                   <td>{item.name}</td>
                   <td>
                     <img
-                      src={item.imageUrl}
+                      src={item.imageURL}
                       alt={item.name}
                       className="item-image"
                     />
@@ -96,7 +111,7 @@ const Dashboard = () => {
                     </Link>
                     <button
                       className="delete-button"
-                      onClick={() => handleDelete(item.Id)}
+                      onClick={() => handleDelete(item.Id, item.imageURL)}
                     >
                       <FaTrash /> Delete
                     </button>

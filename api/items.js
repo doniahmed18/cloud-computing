@@ -3,7 +3,7 @@
 const express = require("express")
 const router = express.Router()
 const AWS = require("aws-sdk")
-
+const s3 = new AWS.S3()
 AWS.config.update({ region: process.env.AWS_REGION })
 
 const docClient = new AWS.DynamoDB.DocumentClient()
@@ -109,6 +109,28 @@ router.delete("/items/:id", async (req, res) => {
     res.json({ message: "Item deleted successfully" })
   } catch (err) {
     console.error("Error deleting item:", err)
+    res.status(500).json({ error: "Internal server error" })
+  }
+})
+
+router.delete("/images/:imageURL", async (req, res) => {
+  const { imageURL } = req.params
+
+  // Specify the bucket name
+  const bucketName = "clouddprojectt" // Replace 'your-bucket-name' with your S3 bucket name
+
+  // Set parameters for deleting the image
+  const params = {
+    Bucket: bucketName,
+    Key: imageURL, // Use the image URL directly as the key
+  }
+
+  try {
+    // Delete the image from the S3 bucket
+    await s3.deleteObject(params).promise()
+    res.json({ message: "Image deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting image:", error)
     res.status(500).json({ error: "Internal server error" })
   }
 })

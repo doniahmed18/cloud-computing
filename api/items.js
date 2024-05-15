@@ -10,7 +10,7 @@ const docClient = new AWS.DynamoDB.DocumentClient()
 
 // Create item
 router.post("/items", async (req, res) => {
-  const { age, name, email, imageUrl } = req.body
+  const { age, name, email, imageURL } = req.body
   const params = {
     TableName: "Project_1",
     Item: {
@@ -18,7 +18,7 @@ router.post("/items", async (req, res) => {
       age,
       name,
       email,
-      imageUrl,
+      imageURL,
     },
   }
   try {

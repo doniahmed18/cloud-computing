@@ -7,7 +7,21 @@ const ImageUpload = ({ bucketName }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [items, setItems] = useState([])
 
+
+  const fetchItems = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/items")
+      if (!response.ok) {
+        throw new Error("Failed to fetch items")
+      }
+      const data = await response.json()
+      setItems(data)
+    } catch (error) {
+      console.error("Error fetching items:", error)
+    }
+  }
   const s3 = new AWS.S3({
     accessKeyId: "AKIAVRUVVJ5QIUYZXDZB",
     secretAccessKey: "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",
@@ -68,7 +82,6 @@ const ImageUpload = ({ bucketName }) => {
         </div>
       {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
       {uploadError && <p>{uploadError}</p>}
-      {uploadedImageUrl && <img src={uploadedImageUrl} className="imageuploaded"alt="Uploaded" />}
     </div>
     </div>
   );

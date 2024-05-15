@@ -1,11 +1,13 @@
 .create-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   margin-top: 50px;
+  padding-left: 35px;
+
 }
 
 .form-group {
@@ -61,4 +63,69 @@ input[type="email"] {
 
 .back-link:hover {
   color: rgb(255, 0, 0) bff; /* Change color on hover as needed */
+}
+.form-group{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+}
+.upload-group{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  border: 5px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  margin: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  gap: 25px;
+}
+.imageuploaded{
+margin-top: 10px;
+max-width: 600px;
+}
+.inputfield{
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+.upload{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+width:100%;
+height: 100vh;
+
+}
+.imageFile{
+}
+.but{
+  background-color: #007aff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+
+}
+.containerr{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 }

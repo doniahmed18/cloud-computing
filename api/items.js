@@ -64,29 +64,33 @@ router.get("/items/:id", async (req, res) => {
   }
 })
 
-// Update item
+// Updating Item with Image Retention
 router.put("/items/:id", async (req, res) => {
   const { id } = req.params
-  const { age, name, email, imageUrl } = req.body
-  const params = {
-    TableName: "Project_1", // Replace 'Project/1' with your DynamoDB table name
-    Key: {
-      itemId: id,
-    },
-    UpdateExpression:
-      "SET age = :age, #n = :name, email = :email, imageUrl = :imageUrl",
-    ExpressionAttributeNames: {
-      "#n": "name",
-    },
-    ExpressionAttributeValues: {
-      ":age": age,
-      ":name": name,
-      ":email": email,
-      ":imageUrl": imageUrl,
-    },
-    ReturnValues: "ALL_NEW",
-  }
+  const { age, name, email, imageURL } = req.body
+
   try {
+    // Fetch the existing item to retain the old image URL
+    const existingItem = await docClient.get({ TableName: "Project_1", Key: { Id: id } }).promise()
+    if (!existingItem.Item) {
+      return res.status(404).json({ error: "Item not found" })
+    }
+
+    const params = {
+      TableName: "Project_1",
+      Key: { Id: id },
+      UpdateExpression: "SET age = :age, #n = :name, email = :email, imageURL = :imageURL, oldImageURL = :oldImageURL",
+      ExpressionAttributeNames: { "#n": "name" },
+      ExpressionAttributeValues: {
+        ":age": age,
+        ":name": name,
+        ":email": email,
+        ":imageURL": imageURL,
+        ":oldImageURL": existingItem.Item.imageURL,
+      },
+      ReturnValues: "ALL_NEW",
+    }
+
     const data = await docClient.update(params).promise()
     res.json(data.Attributes)
   } catch (err) {
@@ -94,6 +98,7 @@ router.put("/items/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 })
+
 
 // Delete item
 router.delete("/items/:id", async (req, res) => {

@@ -1,30 +1,56 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
-import "./Create.css";
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import { FaArrowLeft } from "react-icons/fa"
+import "./Create.css"
 
 const Create = () => {
-  const [itemName, setItemName] = useState("");
-  const [imageFile, setImageFile] = useState(null);
+  const [itemName, setItemName] = useState("")
+  const [itemAge, setItemAge] = useState("")
+  const [itemEmail, setItemEmail] = useState("")
 
   const handleNameChange = (e) => {
-    setItemName(e.target.value);
-  };
+    setItemName(e.target.value)
+  }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-  };
+  const handleAgeChange = (e) => {
+    setItemAge(e.target.value)
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission, e.g., send data to server
-    console.log("Item Name:", itemName);
-    console.log("Image File:", imageFile);
-    // Reset form fields
-    setItemName("");
-    setImageFile(null);
-  };
+  const handleEmailChange = (e) => {
+    setItemEmail(e.target.value)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const createResponse = await fetch("http://localhost:4000/api/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          age: itemAge,
+          name: itemName,
+          email: itemEmail,
+        }),
+      })
+
+      const createData = await createResponse.json()
+      if (!createResponse.ok) {
+        throw new Error(createData.error || "Could not create the item")
+      }
+
+      alert("Item created successfully!")
+
+      setItemName("")
+      setItemAge("")
+      setItemEmail("")
+    } catch (error) {
+      console.error("Failed to create the item:", error)
+      alert(`Failed to create the item: ${error.message}`)
+    }
+  }
 
   return (
     <div>
@@ -44,23 +70,33 @@ const Create = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="imageFile">Upload Image:</label>
+            <label htmlFor="itemAge">Age:</label>
             <input
-              type="file"
-              id="imageFile"
-              accept="image/*"
-              onChange={handleImageChange}
+              type="text"
+              id="itemAge"
+              value={itemAge}
+              onChange={handleAgeChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="itemEmail">Email:</label>
+            <input
+              type="email"
+              id="itemEmail"
+              value={itemEmail}
+              onChange={handleEmailChange}
               required
             />
           </div>
           <button type="submit">Create Item</button>
         </form>
         <Link to="/" className="back-link">
-        <FaArrowLeft/> Back to Dashboard
+          <FaArrowLeft /> Back to Dashboard
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Create;
+export default Create

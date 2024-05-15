@@ -1,8 +1,8 @@
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import Create from "./components/Create";
-import Update from "./components/Update";
+import ReactDOM from "react-dom/client"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Dashboard from "./components/Dashboard"
+import Create from "./components/Create"
+import Update from "./components/Update"
 
 export default function App() {
   return (
@@ -10,12 +10,11 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/create" element={<Create />} />
-        <Route path="/update" element={<Update />} />
+        <Route path="/update/:id" element={<Update />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(<App />)

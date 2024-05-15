@@ -1,41 +1,55 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa"; 
-import "./Dashboard.css"; // Import the corresponding CSS file
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa"
+import "./Dashboard.css" // Import the corresponding CSS file
 
 const Dashboard = () => {
-  // Dummy data representing items
-  const items = [
-    { id: 1, name: "Item 1", image: "/amazon-logo.png" },
-    { id: 2, name: "Item 2", image: "/amazon-logo.png" }, // Provide the path to the image
-    { id: 3, name: "Item 3", image: "/amazon-logo.png" },
-    { id: 4, name: "Item 4", image: "/amazon-logo.png" },
-    { id: 5, name: "Item 5", image: "/amazon-logo.png" }
-    // { id: 6, name: 'Item 6', image: 'image6.jpg' },
-    // { id: 7, name: 'Item 7', image: 'image7.jpg' },
-    // { id: 8, name: 'Item 8', image: 'image8.jpg' },
-    // { id: 9, name: 'Item 9', image: 'image9.jpg' },
-    // { id: 10, name: 'Item 10', image: 'image10.jpg' },
-    // { id: 11, name: 'Item 11', image: 'image11.jpg' },
-    // { id: 12, name: 'Item 12', image: 'image12.jpg' },
-    // { id: 13, name: 'Item 13', image: 'image13.jpg' },
-  ];
+  const [items, setItems] = useState([])
 
-  // Function to handle edit action
-  const handleEdit = (id) => {
-    // Logic to handle edit action
-    console.log(`Editing item with ID: ${id}`);
-  };
+  useEffect(() => {
+    fetchItems()
+  }, [])
 
-  // Function to handle delete action
-  const handleDelete = (id) => {
-    // Display confirmation dialog
-    const confirmDelete = window.confirm("Do you really want to delete this item?");
-    if (confirmDelete) {
-      // Logic to handle delete action
-      console.log(`Deleting item with ID: ${id}`);
+  const fetchItems = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/items")
+      if (!response.ok) {
+        throw new Error("Failed to fetch items")
+      }
+      const data = await response.json()
+      setItems(data)
+    } catch (error) {
+      console.error("Error fetching items:", error)
     }
-  };
+  }
+
+  const handleEdit = (id) => {
+    console.log(`Editing item with ID: ${id}`)
+  }
+
+  const handleDelete = async (id) => {
+    console.log("Received id:", id) // Log the value of id
+    if (!id) {
+      console.error("Invalid id provided")
+      return
+    }
+    const confirmDelete = window.confirm(
+      "Do you really want to delete this item?"
+    )
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`http://localhost:4000/api/items/${id}`, {
+          method: "DELETE",
+        })
+        if (!response.ok) {
+          throw new Error("Failed to delete item")
+        }
+        fetchItems()
+      } catch (error) {
+        console.error("Error deleting item:", error)
+      }
+    }
+  }
 
   return (
     <div className="background">
@@ -61,24 +75,28 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {items.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
+                <tr key={item.Id}>
+                  <td>{item.Id}</td>
                   <td>{item.name}</td>
                   <td>
-                    <img src={item.image} alt={item.name} className="item-image" />
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="item-image"
+                    />
                   </td>
                   <td>
-                    <Link to="/update">
+                    <Link to={`/update/${item.Id}`}>
                       <button
                         className="edit-button"
-                        onClick={() => handleEdit(item.id)}
+                        onClick={() => handleEdit(item.Id)}
                       >
                         <FaEdit /> Edit
                       </button>
                     </Link>
                     <button
                       className="delete-button"
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDelete(item.Id)}
                     >
                       <FaTrash /> Delete
                     </button>
@@ -90,7 +108,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

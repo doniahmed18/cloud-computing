@@ -2,19 +2,18 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { FaArrowLeft } from "react-icons/fa"
 import "./Create.css"
-import AWS from 'aws-sdk';
+import AWS from "aws-sdk"
 
 const Create = () => {
   const [itemName, setItemName] = useState("")
   const [itemAge, setItemAge] = useState("")
   const [itemEmail, setItemEmail] = useState("")
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadError, setUploadError] = useState(null)
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null)
   const [items, setItems] = useState([])
-
 
   const fetchItems = async () => {
     try {
@@ -31,13 +30,12 @@ const Create = () => {
   const s3 = new AWS.S3({
     accessKeyId: "AKIAVRUVVJ5QIUYZXDZB",
     secretAccessKey: "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",
-    region: "us-east-1"
-  });
+    region: "us-east-1",
+  })
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
+    setSelectedFile(event.target.files[0])
+  }
 
   const handleNameChange = (e) => {
     setItemName(e.target.value)
@@ -53,23 +51,23 @@ const Create = () => {
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      console.error('No file selected');
-      return;
+      console.error("No file selected")
+      return
     }
-  
-    setUploading(true);
-  
+
+    setUploading(true)
+
     const params = {
       Bucket: "clouddprojectt",
       Key: selectedFile.name,
       Body: selectedFile,
-    };
-  
+    }
+
     try {
-      const response = await s3.upload(params).promise();
-      console.log('File uploaded successfully:', response.Location);
-      setUploadedImageUrl(response.Location);
-  
+      const response = await s3.upload(params).promise()
+      console.log("File uploaded successfully:", response.Location)
+      setUploadedImageUrl(response.Location)
+
       // Now that the image is uploaded, proceed with form submission
       const createResponse = await fetch("http://localhost:4000/api/items", {
         method: "POST",
@@ -82,40 +80,37 @@ const Create = () => {
           email: itemEmail,
           imageURL: response.Location, // Use the uploaded image URL directly
         }),
-      });
-  
-      const createData = await createResponse.json();
+      })
+
+      const createData = await createResponse.json()
       if (!createResponse.ok) {
-        throw new Error(createData.error || "Could not create the item");
+        throw new Error(createData.error || "Could not create the item")
       }
-  
-      alert("Item created successfully!");
-  
-      setItemName("");
-      setItemAge("");
-      setItemEmail("");
-      setUploadedImageUrl(null); // Reset the uploadedImageUrl state after posting the item
+
+      alert("Item created successfully!")
+
+      setItemName("")
+      setItemAge("")
+      setItemEmail("")
+      setUploadedImageUrl(null) // Reset the uploadedImageUrl state after posting the item
     } catch (error) {
-      console.error('Error uploading file:', error);
-      setUploadError('Error uploading file');
+      console.error("Error uploading file:", error)
+      setUploadError("Error uploading file")
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
-  
+  }
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
+    e.preventDefault()
+
     try {
-      await handleUpload(); // Call the handleUpload function which now includes form submission logic
+      await handleUpload() // Call the handleUpload function which now includes form submission logic
     } catch (error) {
-      console.error("Failed to create the item:", error);
-      alert(`Failed to create the item: ${error.message}`);
+      console.error("Failed to create the item:", error)
+      alert(`Failed to create the item: ${error.message}`)
     }
-  };
-  
-  
-  
+  }
 
   return (
     <div>
@@ -155,28 +150,33 @@ const Create = () => {
             />
           </div>
 
-        
-        
-<div className='inputfield'> 
-            <label htmlFor="imageFile"> <strong> Upload Image:</strong></label>
+          <div className="inputfield">
+            <label htmlFor="imageFile">
+              {" "}
+              <strong> Upload Image:</strong>
+            </label>
             <input
               type="file"
               id="imageFile"
               accept="image/*"
               onChange={handleFileChange}
               required
-              className='imageFile'
+              className="imageFile"
             />
           </div>
-      <button className="but"onClick={handleSubmit} disabled={uploading}>
-        {uploading ? 'Uploading...' : 'Upload'}
-      </button>
-       
-      {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
-      {uploadError && <p>{uploadError}</p>}
-      {uploadedImageUrl && <img src={uploadedImageUrl} className="imageuploaded"alt="Uploaded" />}
+          <button className="but" onClick={handleSubmit} disabled={uploading}>
+            {uploading ? "Uploading..." : "Upload"}
+          </button>
 
-          
+          {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
+          {uploadError && <p>{uploadError}</p>}
+          {uploadedImageUrl && (
+            <img
+              src={uploadedImageUrl}
+              className="imageuploaded"
+              alt="Uploaded"
+            />
+          )}
         </form>
         <Link to="/" className="back-link">
           <FaArrowLeft /> Back to Dashboard

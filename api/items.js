@@ -64,29 +64,37 @@ router.get("/items/:id", async (req, res) => {
   }
 })
 
-// Updating Item with Image Retention
 router.put("/items/:id", async (req, res) => {
   const { id } = req.params
   const { age, name, email, imageURL } = req.body
 
   try {
-    // Fetch the existing item to retain the old image URL
-    const existingItem = await docClient.get({ TableName: "Project_1", Key: { Id: id } }).promise()
+    const existingItem = await docClient
+      .get({ TableName: "Project_1", Key: { Id: id } })
+      .promise()
     if (!existingItem.Item) {
       return res.status(404).json({ error: "Item not found" })
+    }
+
+    const oldImageURL = existingItem.Item.imageURL
+
+    let updatedImageURL = oldImageURL
+    if (imageURL) {
+      updatedImageURL = imageURL
     }
 
     const params = {
       TableName: "Project_1",
       Key: { Id: id },
-      UpdateExpression: "SET age = :age, #n = :name, email = :email, imageURL = :imageURL, oldImageURL = :oldImageURL",
+      UpdateExpression:
+        "SET age = :age, #n = :name, email = :emailValue, imageURL = :imageURL, oldImageURL = :oldImageURL",
       ExpressionAttributeNames: { "#n": "name" },
       ExpressionAttributeValues: {
         ":age": age,
         ":name": name,
-        ":email": email,
-        ":imageURL": imageURL,
-        ":oldImageURL": existingItem.Item.imageURL,
+        ":emailValue": email,
+        ":imageURL": updatedImageURL,
+        ":oldImageURL": oldImageURL,
       },
       ReturnValues: "ALL_NEW",
     }
@@ -98,7 +106,6 @@ router.put("/items/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 })
-
 
 // Delete item
 router.delete("/items/:id", async (req, res) => {

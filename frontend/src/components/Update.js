@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import "./Update.css" //
+import "./Update.css"
 
 const Update = () => {
   const { id } = useParams()
 
   // State to store the item data
   const [item, setItem] = useState({})
+  const [imageFile, setImageFile] = useState(null)
 
   useEffect(() => {
     fetchItem(id)
@@ -26,40 +27,17 @@ const Update = () => {
   }
 
   const handleUpdate = async () => {
-    // Construct the UpdateExpression and ExpressionAttributeValues
-    const updateParams = {
-      TableName: "Project_1",
-      Key: {
-        Id: item.Id, // Assuming "Id" is the primary key
-      },
-      UpdateExpression:
-        "SET #nameAttr = :nameValue, #ageAttr = :ageValue, #emailAttr = :emailValue, #imageUrlAttr = :imageUrlValue",
-      ExpressionAttributeNames: {
-        "#nameAttr": "name",
-        "#ageAttr": "age",
-        "#emailAttr": "email",
-        "#imageUrlAttr": "imageUrl",
-      },
-      ExpressionAttributeValues: {
-        ":nameValue": item.name,
-        ":ageValue": item.age,
-        ":emailValue": item.email,
-        ":imageUrlValue": item.imageUrl,
-      },
-      ReturnValues: "ALL_NEW",
-    }
-
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/items/${item.Id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateParams),
-        }
-      )
+      const formData = new FormData()
+      formData.append("image", imageFile) // Append the image file to the FormData
+
+      const response = await fetch(`http://localhost:4000/api/items/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+      })
       if (!response.ok) {
         throw new Error("Failed to update item")
       }
@@ -69,7 +47,6 @@ const Update = () => {
     }
   }
 
-  // Function to handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setItem({
@@ -78,9 +55,16 @@ const Update = () => {
     })
   }
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    setImageFile(file)
+  }
   return (
     <div className="update-container">
       <h1>Update Item</h1>
+      <div className="image-container">
+        <img src={item.imageURL} alt="Item" />
+      </div>
       <form onSubmit={handleUpdate}>
         <div className="form-group">
           <label htmlFor="name">Name:</label>
@@ -107,6 +91,15 @@ const Update = () => {
             name="email"
             value={item.email}
             onChange={handleInputChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="image">Update Image:</label>
+          <input
+            type="file"
+            accept="image/*"
+            name="image"
+            onChange={handleFileChange}
           />
         </div>
         <button type="submit">Update</button>

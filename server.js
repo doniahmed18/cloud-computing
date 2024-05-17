@@ -1,37 +1,29 @@
 const express = require("express")
 const app = express()
 const cors = require("cors")
-
+const path = require("path")
 const publicapiRoutes = require("./api/index")
-const itemsRouter = require("./api/items") // Import the items router
+const itemsRouter = require("./api/items")
 
 const port = 4000
+
+// Middleware
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Mount the router
+// API routes
 app.use("/api", publicapiRoutes)
-// app.post("/create-item", async (req, res) => {
-//   const { itemName, imageUrl } = req.body
-//   const params = {
-//     TableName: "your-table-name",
-//     Item: {
-//       itemId: `${Date.now()}`,
-//       itemName,
-//       imageUrl,
-//     },
-//   }
-
-//   try {
-//     await dynamodb.put(params).promise()
-//     res.json({ message: "Item created successfully!" })
-//   } catch (err) {
-//     console.error("Error creating item in DynamoDB", err)
-//     res.status(500).json({ error: "Internal server error" })
-//   }
-// })
 app.use("/api", itemsRouter)
+
+// Serve static files from the React build directory
+const buildPath = path.join(__dirname, "../cloud-computing/frontend/build")
+app.use(express.static(buildPath))
+
+// Define a catch-all route that serves the index.html file
+app.get("*", (req, res) => {
+  res.sendFile(path.join(buildPath, "index.html"))
+})
 
 // Start the server
 app.listen(port, () => {

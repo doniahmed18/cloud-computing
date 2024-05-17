@@ -17,7 +17,7 @@ const Create = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://54.196.154.144/api/items")
+      const response = await fetch("http://18.209.62.89/api/items")
       if (!response.ok) {
         throw new Error("Failed to fetch items")
       }
@@ -69,7 +69,7 @@ const Create = () => {
       setUploadedImageUrl(response.Location)
 
       // Now that the image is uploaded, proceed with form submission
-      const createResponse = await fetch("http://54.196.154.144/api/items", {
+      const createResponse = await fetch("http://18.209.62.89/api/items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

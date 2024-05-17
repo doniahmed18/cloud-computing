@@ -12,10 +12,10 @@ const Dashboard = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://23.22.154.16//api/items", {
+      const response = await fetch("http://54.91.195.205/api/items", {
         headers: {
           "Content-Type": "application/json", // Specify content type as JSON
-          Accept: 'application/json',
+          Accept: "application/json",
         },
       })
       if (!response.ok) {
@@ -51,11 +51,11 @@ const Dashboard = () => {
     if (confirmDelete) {
       try {
         // Delete the item from the API
-        const response = await fetch(`http://23.22.154.16/api/items/${id}`, {
+        const response = await fetch(`http://54.91.195.205/api/items/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json", // Specify content type as JSON
-            Accept: 'application/json',
+            Accept: "application/json",
           },
         })
 
@@ -68,7 +68,7 @@ const Dashboard = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json", // Specify content type as JSON
-            Accept: 'application/json',
+            Accept: "application/json",
           },
         })
 

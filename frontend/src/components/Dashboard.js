@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/items")
+      const response = await fetch("http://23.22.154.16//api/items")
       if (!response.ok) {
         throw new Error("Failed to fetch items")
       }
@@ -46,7 +46,7 @@ const Dashboard = () => {
     if (confirmDelete) {
       try {
         // Delete the item from the API
-        const response = await fetch(`http://localhost:4000/api/items/${id}`, {
+        const response = await fetch(`http://23.22.154.16/api/items/${id}`, {
           method: "DELETE",
         })
 

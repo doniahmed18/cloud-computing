@@ -17,7 +17,7 @@ const Create = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/items")
+      const response = await fetch("http://23.22.154.16/api/items")
       if (!response.ok) {
         throw new Error("Failed to fetch items")
       }

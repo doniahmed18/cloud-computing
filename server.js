@@ -10,7 +10,7 @@ const port = 4000
 // Middleware
 app.use(
   cors({
-    origin: "http://54.91.195.205", // Replace with your frontend URL
+    origin: "http://23.22.154.16/", // Replace with your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Specify allowed HTTP methods
     allowedHeaders: ["Content-Type"], // Specify allowed request headers
     optionsSuccessStatus: 200, // Some legacy browsers (IE11, various SmartTVs) choke on 204

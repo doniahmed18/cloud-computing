@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://54.91.195.205/api/items", {
+      const response = await fetch("http://23.22.154.16/api/items", {
         headers: {
           "Content-Type": "application/json", // Specify content type as JSON
           Accept: "application/json",

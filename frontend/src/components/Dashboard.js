@@ -12,7 +12,12 @@ const Dashboard = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://23.22.154.16//api/items")
+      const response = await fetch("http://23.22.154.16//api/items", {
+        headers: {
+          "Content-Type": "application/json", // Specify content type as JSON
+          Accept: 'application/json',
+        },
+      })
       if (!response.ok) {
         throw new Error("Failed to fetch items")
       }
@@ -48,6 +53,10 @@ const Dashboard = () => {
         // Delete the item from the API
         const response = await fetch(`http://23.22.154.16/api/items/${id}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json", // Specify content type as JSON
+            Accept: 'application/json',
+          },
         })
 
         if (!response.ok) {
@@ -57,6 +66,10 @@ const Dashboard = () => {
         // Delete the associated image from S3
         await fetch(`http://s3.amazonaws.com/clouddprojectt/${objectKey}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json", // Specify content type as JSON
+            Accept: 'application/json',
+          },
         })
 
         fetchItems()

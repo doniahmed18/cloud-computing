@@ -11,7 +11,7 @@ const ImageUpload = ({ bucketName }) => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch("http://23.22.154.16/api/items")
+      const response = await fetch("http://54.196.154.144/api/items")
       if (!response.ok) {
         throw new Error("Failed to fetch items")
       }
